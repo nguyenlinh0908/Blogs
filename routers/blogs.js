@@ -4,8 +4,9 @@ const {
   createPost,
   posts,
   postByID,
+  postsByCategory,
   deletePostByID,
-  updatePostByID
+  updatePostByID,
 } = require("../src/api");
 const { verifyToken } = require("../middleware/authentication");
 const express = require("express");
@@ -17,6 +18,7 @@ router.get("/categories", categories);
 router.post("/post", verifyToken, createPost);
 router.get("/posts", posts);
 router.get("/post/:id", postByID);
-router.delete("/post/delete/:id", verifyToken,deletePostByID);
-router.patch('/post/update/:id', verifyToken, updatePostByID)
+router.get("/posts/category/:category", postsByCategory);
+router.delete("/post/delete/:id", verifyToken, deletePostByID);
+router.patch("/post/update/:id", verifyToken, updatePostByID);
 module.exports = router;
