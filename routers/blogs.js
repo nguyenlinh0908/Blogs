@@ -4,6 +4,7 @@ const {
   createPost,
   posts,
   postByID,
+  searchPostsByKey,
   postsByCategory,
   deletePostByID,
   updatePostByID,
@@ -16,9 +17,12 @@ router.post("/category", createCategory);
 router.get("/categories", categories);
 //posts router
 router.post("/post", verifyToken, createPost);
+router.post("/search", searchPostsByKey);
 router.get("/posts", posts);
-router.get("/post/:id", postByID);
+router
+  .route("/post/:id")
+  .get(postByID)
+  .patch(verifyToken, updatePostByID)
+  .delete(verifyToken, deletePostByID);
 router.get("/posts/category/:category", postsByCategory);
-router.delete("/post/delete/:id", verifyToken, deletePostByID);
-router.patch("/post/update/:id", verifyToken, updatePostByID);
 module.exports = router;

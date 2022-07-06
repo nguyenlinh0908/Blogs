@@ -136,6 +136,25 @@ const postByID = async (req, res) => {
         .json({ status: "success", errors: err });
     });
 };
+const searchPostsByKey = async (req, res) => {
+  let { key } = req.body;
+  await Post.find({
+    $or: [
+      {
+        title: { $regex: key, $options: "i" },
+      },
+      {
+        category: { $regex: key, $options: "i" },
+      },
+    ],
+  })
+    .then((data) => {
+      res.status(StatusCodes.OK).json(data);
+    })
+    .catch((err) => {
+      res.status(StatusCodes.BAD_REQUEST).json(err);
+    });
+};
 async function updateViewer(id, currentView) {
   let updateViewer = parseInt(currentView) + 1;
   await Post.updateOne({ _id: id }, { views: updateViewer });
@@ -168,7 +187,7 @@ const updatePostByID = async (req, res) => {
     } else {
       res.status(StatusCodes.OK).json(post);
     }
-  });
+  }).clone();
 };
 module.exports = {
   // user
@@ -182,6 +201,7 @@ module.exports = {
   createPost,
   posts,
   postsByCategory,
+  searchPostsByKey,
   postByID,
   deletePostByID,
   updatePostByID,
