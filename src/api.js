@@ -73,13 +73,19 @@ const createPost = async (req, res) => {
     createdAt: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
     category: category,
   };
-  await Post.create(data)
-    .then((data) => {
-      res.status(StatusCodes.OK).json(data);
-    })
-    .catch((err) => {
-      res.status(StatusCodes.BAD_REQUEST).json({ status: "fail", errors: err });
-    });
+  try {
+    await Post.create(data)
+      .then((data) => {
+        res.status(StatusCodes.CREATED).json(data);
+      })
+      .catch((err) => {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ status: "fail", errors: err });
+      });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json(error);
+  }
 };
 const posts = async (req, res) => {
   let options = req.query;
